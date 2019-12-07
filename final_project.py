@@ -10,7 +10,7 @@ import json
 import sys
 import requests
 import data_structures
-import api_data
+import secret
 
 #Define constants and initialize cache file.
 DBNAME = 'media.db'
@@ -264,7 +264,7 @@ def get_bechdel_titles(cur, titles_list):
 #########################################################################
 def make_request_using_cache(title, media_type):
     if media_type == "movie":
-        url = "http://www.omdbapi.com/?apikey=" + api_data.OMDB_ACCESS_KEY + "&t=" + title
+        url = "http://www.omdbapi.com/?apikey=" + secret.OMDB_ACCESS_KEY + "&t=" + title
     elif media_type == "book":
         url = "https://www.googleapis.com/books/v1/volumes?q=" + title
     unique_ident = url
