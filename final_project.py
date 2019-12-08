@@ -310,6 +310,9 @@ def get_media_from_db (movie_obj_list, book_obj_list):
     for book_tuple in book_results_list:
         book_obj_list.append(data_struct.Book(book_tuple[1], book_tuple[3], book_tuple[2], book_tuple[4]))
 
+def deploy_media_front_end(movie_list, book_list):
+    pass
+
 #########################################################################
 # Main method, runs the program with an optional --init flag to rebuild
 # the media database and reinsert data.
@@ -329,6 +332,7 @@ if __name__=="__main__":
 
     get_media_from_db(movie_list, book_list)
 
+    deploy_media_front_end(movie_list, book_list)
     #Test
     for mov in movie_list:
         print (mov)
