@@ -9,7 +9,7 @@ import csv
 import json
 import sys
 import requests
-import data_structures
+import data_struct
 import secret
 
 #Define constants and initialize cache file.
@@ -185,16 +185,12 @@ def insert_books_into_db():
     for title in titles_list:
         title[0]=title[0].replace(" ", "-")
 
-
     for title in titles_list:
         book_resp = make_request_using_cache(title[0], "book")
 
+        #print(book_resp)
         #Select an edition of the book based on returned results
-        print(book_resp)
-
-
         if "items" in book_resp.keys(): #Ensures book_resp has returned books, not an error resp
-
             #Loop through all of the books returned to find the one the referenced in movie list
             for book in book_resp["items"]:
                 book_title = book["volumeInfo"]["title"].replace(" ", "-")
@@ -217,28 +213,30 @@ def insert_books_into_db():
                     #print(book_title, book_year, book_author, book_description)
                     book_is_found = True
 
-                    # Look up foreign key for movie_id from Movies table
+                    #Look up foreign key for movie_id from Movies table
                     statement = "SELECT Id FROM Movies WHERE Title=?"
                     result = cur.execute(statement, (book_title,))
                     for row in result:
                         movie_id = int(row[0])
                         #print(movie_id)
 
+                    #Insert book into media.db
                     insertion = (None, book_title, book_year, book_author, book_description, movie_id)
                     statement = 'INSERT INTO "Books" '
                     statement += "VALUES (?, ?, ?, ?, ?, ?)"
                     cur.execute(statement, insertion)
                     conn.commit()
 
+            #Reset so that next title in title_list will search for matching book
             book_is_found = False
     conn.close()
 
 
 #########################################################################
-#
-#  params:         cur -
-#          titles_list -
-# returns:
+#  Query database for all titles of movies in the Bechdel test data set.
+#  params:         cur - DB cursor
+#          titles_list - the (empty) list of titles
+# returns: the list of titles in the data set
 #########################################################################
 def get_bechdel_titles(cur, titles_list):
     #Query Bechdel Stats table to get the list of titles in set of movies
@@ -287,10 +285,53 @@ def make_request_using_cache(title, media_type):
     fw.close() # Close the open file
     return CACHE_DICTION[unique_ident]
 
-if __name__=="__main__":
+#########################################################################
+# Query the database for movies and books, and create a list of objects
+# for each data set based on the returned query result.
+#  params: movie_obj_list -
+#           book_obj_list -
+# returns:
+#########################################################################
+def get_media_from_db (movie_obj_list, book_obj_list):
+    conn = sqlite3.connect(DBNAME)
+    cur = conn.cursor()
 
-    # if len(sys.argv) > 1 and sys.argv[1] == '--init':
-    init_db()
-    insert_bechdel_stats_into_db()
-    insert_movies_into_db()
-    insert_books_into_db()
+    statement = "SELECT * FROM Movies"
+    movie_results = cur.execute(statement)
+    movie_results_list = movie_results.fetchall()
+
+    for movie_tuple in movie_results_list:
+        movie_obj_list.append(data_struct.Movie(movie_tuple[1], movie_tuple[3], movie_tuple[2], movie_tuple[6],
+                                                movie_tuple[4], movie_tuple[5], movie_tuple[7]))
+    statement = "SELECT * FROM Books"
+    book_results = cur.execute(statement)
+    book_results_list = book_results.fetchall()
+
+    for book_tuple in book_results_list:
+        book_obj_list.append(data_struct.Book(book_tuple[1], book_tuple[3], book_tuple[2], book_tuple[4]))
+
+#########################################################################
+# Main method, runs the program with an optional --init flag to rebuild
+# the media database and reinsert data.
+#  params: None
+#
+# returns: Exit Status
+#########################################################################
+if __name__=="__main__":
+    movie_list = []
+    book_list = []
+
+    if len(sys.argv) > 1 and sys.argv[1] == '--init':
+        init_db()
+        insert_bechdel_stats_into_db()
+        insert_movies_into_db()
+        insert_books_into_db()
+
+    get_media_from_db(movie_list, book_list)
+
+    #Test
+    for mov in movie_list:
+        print (mov)
+
+    for book in book_list:
+        print (book)
