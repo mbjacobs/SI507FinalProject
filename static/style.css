@@ -1,0 +1,157 @@
+html{
+	scroll-behavior: smooth;
+}
+
+body{
+	font-family: 'Palanquin Dark', sans-serif; 
+	font-size: 1.0em;
+	margin: 0;
+	padding: 0;
+	position: relative;
+}
+
+html, body {
+	height: 100%;
+}
+
+main {
+	padding-bottom: 50px;
+}
+
+.parallax {
+	height: 100%;
+
+	/*Parallax scrolling effect*/
+	background-attachment: fixed;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+/*Source: https://www.desktop-background.com/p/2015/03/22/920932_film-backgrounds-
+free-stock-photo-public-domain-pictures_1920x1272_h.jpg */
+.home_background {
+	/*background-image: url("./img/backgrounds/background-home.jpg");*/
+	background-color: grey;
+
+}
+
+/*Source: https://perkinsmediagroup.com/wp-content/uploads/2018/05/Perkins-Media-
+Home-Page-Hero-Image.jpg*/
+.movies_background {
+	background-image: url("./img/backgrounds/background-movies.jpg");
+	background-color: dimgrey;
+}
+
+/*Source:  https://pixabay.com/photos/library-education-wisdom-3115371/*/
+.books_background {
+	background-image: url("../static/img/backgrounds/background-books.jpg");
+	background-color: dimgrey;
+}
+
+ 
+h1 {
+	background-color: rgba(83, 26, 26, 1);
+	margin: 0;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	font-size: 1.75em;
+	text-align: center;
+	color: white;
+}
+
+h1 a {
+	color: white;
+	text-decoration: none;
+}
+
+h2{
+	line-height: 1.5;
+	text-align: center;
+	font-size: 1.5em;
+}
+
+nav{
+	padding-top: 5px;
+	text-align: center; 
+	list-style: none;
+	text-align: center;
+	background-color: rgba(129, 50, 50, 0.4);
+	font-size: 1.25em;
+}
+
+nav ul{
+	display: grid;
+	grid-column: 1 / 4;
+	grid-row: 1 / -1;
+	grid-template-columns: auto auto auto;
+	width: 100vw;
+}
+
+nav li{
+	padding-bottom: 10px;
+}
+
+nav a{
+	color: black;
+	font-weight: bold;
+	text-decoration: none;
+}
+
+nav a:hover{
+	color: #D49D9D;
+}
+
+.selected a, .light_text {
+	color: white;
+}
+
+header {
+	padding-top: 10px;
+}
+
+h1, h2 {
+    text-align: left;
+    padding-left: 10px;
+}
+
+h2 {
+    padding-left: 20px;
+    padding-top: 20px;
+    font-size: 2em;
+}
+
+header p{
+    font-size: 1.5em;
+    line-height: 1.5;
+    padding: 20px 90px 0px 90px;
+    text-align: left;
+}
+
+footer{
+	background-color: rgba(83, 26, 26, 1);
+	color: white;
+	text-align: center;
+	margin-top: 35px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	position: fixed;
+	bottom: 0;
+	width: 100vw;
+}
+
+
+
+.item {
+    padding: 15px;
+}
+
+.book {
+    background: red;
+    opacity: 50%;
+}
+
+.movie {
+    background: white;
+    opacity: 50%;
+}

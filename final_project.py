@@ -11,6 +11,7 @@ import sys
 import requests
 import data_struct
 import secret
+from flask import Flask, render_template, url_for
 
 #Define constants and initialize cache file.
 DBNAME = 'media.db'
@@ -301,8 +302,14 @@ def get_media_from_db (movie_obj_list, book_obj_list):
     movie_results_list = movie_results.fetchall()
 
     for movie_tuple in movie_results_list:
+        statement = "SELECT BechdelStats.Status FROM BechdelStats JOIN Movies ON Movies.BechdelId=BechdelStats.Id" \
+                    " WHERE Movies.BechdelId=" + str(movie_tuple[8])
+        stats_results = cur.execute(statement)
+        status_results_list = stats_results.fetchall()
+        print (status_results_list)
+
         movie_obj_list.append(data_struct.Movie(movie_tuple[1], movie_tuple[3], movie_tuple[2], movie_tuple[6],
-                                                movie_tuple[4], movie_tuple[5], movie_tuple[7]))
+                                                movie_tuple[4], movie_tuple[5], movie_tuple[7], status_results_list[0]))
     statement = "SELECT * FROM Books"
     book_results = cur.execute(statement)
     book_results_list = book_results.fetchall()
@@ -310,8 +317,46 @@ def get_media_from_db (movie_obj_list, book_obj_list):
     for book_tuple in book_results_list:
         book_obj_list.append(data_struct.Book(book_tuple[1], book_tuple[3], book_tuple[2], book_tuple[4]))
 
+    conn.close()
+
+
 def deploy_media_front_end(movie_list, book_list):
-    pass
+    app = Flask(__name__)
+
+    @app.route('/')
+    def index():
+        title_list = []
+
+        for book in book_list:
+            title_list.append(["book", book.title, book.author, book.year, book.summary])
+
+        for movie in movie_list:
+            title_list.append(["movie", movie.title, movie.author, movie.year, movie.summary, movie.rating, movie.genres])
+
+
+        title_list.sort(key=lambda x:x[1])
+
+        return render_template('index.html', my_list=title_list)
+
+    @app.route('/movies/<movie_list>')
+    def movies(movie_str_list):
+        return render_template('movies.html', my_list=movie_str_list)
+
+    @app.route('/books')
+    def books():
+        html = '''        
+          <h1>Book && Movie</h1>        
+          <nav>
+            <a href='/'>Home</a>    
+            <a href='/movies'>Movies</a>    
+            <a href='#'>Books</a>
+          </nav>  
+          <h2>Books</h2>        
+          '''
+        return html
+
+    print('Starting Flask app...', app.name)
+    app.run(debug=True)
 
 #########################################################################
 # Main method, runs the program with an optional --init flag to rebuild
@@ -333,9 +378,10 @@ if __name__=="__main__":
     get_media_from_db(movie_list, book_list)
 
     deploy_media_front_end(movie_list, book_list)
-    #Test
-    for mov in movie_list:
-        print (mov)
 
-    for book in book_list:
-        print (book)
+    # #Test
+    # for mov in movie_list:
+    #     print (mov)
+    #
+    # for book in book_list:
+    #     print (book)

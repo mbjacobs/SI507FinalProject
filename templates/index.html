@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='html5reset.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
+        <title>Book && Movie</title>
+    </head>
+
+    <body class="home_background parallax">
+    <h1>Book && Movie</h1>
+        <main>
+            <nav>
+                <ul>
+                    <li class="selected"><a href="#">Home</a></li>
+                    <li><a href="{{ url_for('static', filename='movies.html')}}">Movies</a></li>
+                    <li><a href="books.html">Books</a></li>
+                </ul>
+            </nav>
+
+            <table>
+              <tr>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Year</th>
+                <th>Summary</th>
+
+              </tr>
+              {% for list in my_list %}
+                {% if list[0] == "movie" %}
+                    <tr class="row movie">
+                {% endif %}
+                {% if list[0] == "book" %}
+                    <tr class="row book">
+                {% endif %}
+                {% for item in list %}
+                        <td class="item">{{item}}</td>
+                {% endfor %}
+                </tr>
+              {% endfor %}
+            </table>
+        </main>
+
+        <footer>
+            <p>Mariah Jacobs - 2019</p>
+        </footer>
+	</body>
+</html>

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='html5reset.css')}}">
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css')}}">
+        <title>Book && Movie</title>
+    </head>
+
+    <body class="home_background parallax">
+    <h1>Book && Movie</h1>
+        <main>
+            <nav>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="movies.html">Movies</a></li>
+                    <li> class="selected"<a href="#">Books</a></li>
+                </ul>
+            </nav>
+            <h2>Books</h2>
+            <p>This is the Books page {{var}}.</p>
+        </main>
+
+        <footer>
+            <p>Mariah Jacobs - 2019</p>
+        </footer>
+	</body>
+</html>
