@@ -10,13 +10,28 @@
     <body class="home_background parallax">
     <h1>Book && Movie</h1>
         <main>
-            <nav>
-                <ul>
-                    <li class="selected"><a href="#">Home</a></li>
-                    <li><a href="{{ url_for('static', filename='movies.html')}}">Movies</a></li>
-                    <li><a href="books.html">Books</a></li>
-                </ul>
-            </nav>
+            <div class="options">
+                <form action="/index" method="POST">
+                    <div class="sort_by">
+                        Sort By:
+                        <input type="radio" name="sortby" value="type"/> Type
+                        <input type="radio" name="sortby" value="title"/> Title
+                        <input type="radio" name="sortby" value="author"/> Author
+                        <input type="radio" name="sortby" value="status"/> Bechdel Status
+                    </div>
+
+                    <div class="sort_order">
+                        Sort Order:
+                        <input type="radio" name="sortorder" value="asc"/> Ascending
+                        <input type="radio" name="sortorder" value="desc"/> Descending
+                        <br/>
+                    </div>
+                    <div class="sort_button">
+                       <input id="update_button" type="submit" name="update" value="Update"/>
+                        <br/>
+                    </div>
+                </form>
+            </div>
 
             <table>
               <tr>
@@ -25,9 +40,11 @@
                 <th>Author</th>
                 <th>Year</th>
                 <th>Summary</th>
-
+                <th>Rating</th>
+                <th>Genres</th>
+                <th>Bechdel Status</th>
               </tr>
-              {% for list in my_list %}
+              {% for list in media_list %}
                 {% if list[0] == "movie" %}
                     <tr class="row movie">
                 {% endif %}
@@ -41,7 +58,6 @@
               {% endfor %}
             </table>
         </main>
-
         <footer>
             <p>Mariah Jacobs - 2019</p>
         </footer>

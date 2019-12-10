@@ -31,6 +31,7 @@ main {
 /*Source: https://www.desktop-background.com/p/2015/03/22/920932_film-backgrounds-
 free-stock-photo-public-domain-pictures_1920x1272_h.jpg */
 .home_background {
+    background-image: url("../static/img/backgrounds/background-home-2.jpg");
 	/*background-image: url("./img/backgrounds/background-home.jpg");*/
 	background-color: grey;
 
@@ -51,7 +52,7 @@ Home-Page-Hero-Image.jpg*/
 
  
 h1 {
-	background-color: rgba(83, 26, 26, 1);
+	background-color: rgba(67,49,75, 1);
 	margin: 0;
 	padding-top: 5px;
 	padding-bottom: 5px;
@@ -71,45 +72,6 @@ h2{
 	font-size: 1.5em;
 }
 
-nav{
-	padding-top: 5px;
-	text-align: center; 
-	list-style: none;
-	text-align: center;
-	background-color: rgba(129, 50, 50, 0.4);
-	font-size: 1.25em;
-}
-
-nav ul{
-	display: grid;
-	grid-column: 1 / 4;
-	grid-row: 1 / -1;
-	grid-template-columns: auto auto auto;
-	width: 100vw;
-}
-
-nav li{
-	padding-bottom: 10px;
-}
-
-nav a{
-	color: black;
-	font-weight: bold;
-	text-decoration: none;
-}
-
-nav a:hover{
-	color: #D49D9D;
-}
-
-.selected a, .light_text {
-	color: white;
-}
-
-header {
-	padding-top: 10px;
-}
-
 h1, h2 {
     text-align: left;
     padding-left: 10px;
@@ -121,6 +83,30 @@ h2 {
     font-size: 2em;
 }
 
+.options {
+	padding-top: 10px;
+	padding-bottom: 10px;
+	text-align: left;
+	background-color: rgba(67,49,75, 0.4);
+	font-size: 1.25em;
+}
+form {
+    display: flex
+}
+
+form div {
+    padding-left: 10px;
+    padding-right: 50px;
+}
+
+.sort_button {
+    margin-left: auto;
+}
+
+header {
+	padding-top: 10px;
+}
+
 header p{
     font-size: 1.5em;
     line-height: 1.5;
@@ -129,7 +115,7 @@ header p{
 }
 
 footer{
-	background-color: rgba(83, 26, 26, 1);
+	background-color: rgba(67,49,75, 1);
 	color: white;
 	text-align: center;
 	margin-top: 35px;
@@ -140,18 +126,20 @@ footer{
 	width: 100vw;
 }
 
-
-
 .item {
     padding: 15px;
 }
 
 .book {
-    background: red;
-    opacity: 50%;
+	background-color: rgba(255,255,255, 0.7);
 }
 
 .movie {
-    background: white;
-    opacity: 50%;
+	background-color: rgba(255,255,255, 0.5);
+}
+
+tr th {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    color: white;
 }

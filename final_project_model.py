@@ -1,17 +1,15 @@
 #########################################################################
 # Name:  Mariah Jacobs
 # Class: SI 507-003
-# Date:  December 11, 2019
-# File:  final_project.py
+# Date:  December 10, 2019
+# File:  final_project_model.py
 #########################################################################
 import sqlite3
 import csv
 import json
-import sys
 import requests
 import data_struct
 import secret
-from flask import Flask, render_template, url_for
 
 #Define constants and initialize cache file.
 DBNAME = 'media.db'
@@ -99,6 +97,7 @@ def init_db():
     conn.commit()
     conn.close()
 
+
 #########################################################################
 # Read CSV file with > 1000 lines and insert values into media.db.
 #  params: None
@@ -129,9 +128,10 @@ def insert_bechdel_stats_into_db():
 
     conn.close()
 
+
 #########################################################################
 # Make requests to cache or Open Movie Database API for movies on the
-# Bechdel list and insert retreived data into media.db.
+# Bechdel list and insert retrieved data into media.db.
 #  params: None
 # returns: None
 #########################################################################
@@ -162,9 +162,10 @@ def insert_movies_into_db():
 
     conn.close()
 
+
 #########################################################################
 # Make requests to cache or Google Books API for books on the
-# Bechdel list and insert retreived data into media.db.
+# Bechdel list and insert retrieved data into media.db.
 #  params: None
 # returns: None
 #########################################################################
@@ -189,7 +190,6 @@ def insert_books_into_db():
     for title in titles_list:
         book_resp = make_request_using_cache(title[0], "book")
 
-        #print(book_resp)
         #Select an edition of the book based on returned results
         if "items" in book_resp.keys(): #Ensures book_resp has returned books, not an error resp
             #Loop through all of the books returned to find the one the referenced in movie list
@@ -211,7 +211,6 @@ def insert_books_into_db():
                     except:
                         book_description = "None"
 
-                    #print(book_title, book_year, book_author, book_description)
                     book_is_found = True
 
                     #Look up foreign key for movie_id from Movies table
@@ -219,7 +218,6 @@ def insert_books_into_db():
                     result = cur.execute(statement, (book_title,))
                     for row in result:
                         movie_id = int(row[0])
-                        #print(movie_id)
 
                     #Insert book into media.db
                     insertion = (None, book_title, book_year, book_author, book_description, movie_id)
@@ -286,102 +284,66 @@ def make_request_using_cache(title, media_type):
     fw.close() # Close the open file
     return CACHE_DICTION[unique_ident]
 
+
 #########################################################################
 # Query the database for movies and books, and create a list of objects
 # for each data set based on the returned query result.
-#  params: movie_obj_list -
-#           book_obj_list -
-# returns:
+#  params:    sortby - column to sort by
+#          sortorder - ascending or descending values
+# returns: media_list
 #########################################################################
-def get_media_from_db (movie_obj_list, book_obj_list):
+def get_media_from_db (sortby='Title', sortorder='desc'):
     conn = sqlite3.connect(DBNAME)
     cur = conn.cursor()
+    movie_obj_list = []
+    book_obj_list = []
+    media_list = []
 
+    #Query database to retrieve all movie records
     statement = "SELECT * FROM Movies"
     movie_results = cur.execute(statement)
     movie_results_list = movie_results.fetchall()
-
     for movie_tuple in movie_results_list:
+
+        #Query database to get the Bechdel test status data for the given movie
         statement = "SELECT BechdelStats.Status FROM BechdelStats JOIN Movies ON Movies.BechdelId=BechdelStats.Id" \
                     " WHERE Movies.BechdelId=" + str(movie_tuple[8])
         stats_results = cur.execute(statement)
         status_results_list = stats_results.fetchall()
-        print (status_results_list)
 
+        #Add Movie to list of Movie objects
         movie_obj_list.append(data_struct.Movie(movie_tuple[1], movie_tuple[3], movie_tuple[2], movie_tuple[6],
-                                                movie_tuple[4], movie_tuple[5], movie_tuple[7], status_results_list[0]))
+                                             movie_tuple[4], movie_tuple[5], movie_tuple[7], status_results_list[0][0]))
+
+    #Query database to retrieve all book records and add Book to list of Book objects
     statement = "SELECT * FROM Books"
     book_results = cur.execute(statement)
     book_results_list = book_results.fetchall()
-
     for book_tuple in book_results_list:
         book_obj_list.append(data_struct.Book(book_tuple[1], book_tuple[3], book_tuple[2], book_tuple[4]))
 
     conn.close()
 
+    #Combine both media objects into a single list
+    for book in book_obj_list:
+        media_list.append(["book", book.title, book.author, book.year[:4], book.summary, "", "", "UNKNOWN"])
+    for movie in movie_obj_list:
+        media_list.append(["movie", movie.title, movie.author, movie.year, movie.summary, movie.rating, movie.genres,
+                           movie.status])
 
-def deploy_media_front_end(movie_list, book_list):
-    app = Flask(__name__)
+    #Define how to sort the media list
+    if sortby == 'type':
+        sort_col = 0
+    elif sortby == 'title':
+        sort_col = 1
+    elif sortby == 'author':
+        sort_col = 2
+    elif sortby == 'status':
+        sort_col = 7
+    else:
+        sort_col = 1
 
-    @app.route('/')
-    def index():
-        title_list = []
+    rev = (sortorder == 'desc')
+    media_list.sort(key=lambda row: row[sort_col], reverse=rev)
 
-        for book in book_list:
-            title_list.append(["book", book.title, book.author, book.year, book.summary])
-
-        for movie in movie_list:
-            title_list.append(["movie", movie.title, movie.author, movie.year, movie.summary, movie.rating, movie.genres])
-
-
-        title_list.sort(key=lambda x:x[1])
-
-        return render_template('index.html', my_list=title_list)
-
-    @app.route('/movies/<movie_list>')
-    def movies(movie_str_list):
-        return render_template('movies.html', my_list=movie_str_list)
-
-    @app.route('/books')
-    def books():
-        html = '''        
-          <h1>Book && Movie</h1>        
-          <nav>
-            <a href='/'>Home</a>    
-            <a href='/movies'>Movies</a>    
-            <a href='#'>Books</a>
-          </nav>  
-          <h2>Books</h2>        
-          '''
-        return html
-
-    print('Starting Flask app...', app.name)
-    app.run(debug=True)
-
-#########################################################################
-# Main method, runs the program with an optional --init flag to rebuild
-# the media database and reinsert data.
-#  params: None
-#
-# returns: Exit Status
-#########################################################################
-if __name__=="__main__":
-    movie_list = []
-    book_list = []
-
-    if len(sys.argv) > 1 and sys.argv[1] == '--init':
-        init_db()
-        insert_bechdel_stats_into_db()
-        insert_movies_into_db()
-        insert_books_into_db()
-
-    get_media_from_db(movie_list, book_list)
-
-    deploy_media_front_end(movie_list, book_list)
-
-    # #Test
-    # for mov in movie_list:
-    #     print (mov)
-    #
-    # for book in book_list:
-    #     print (book)
+    return media_list
