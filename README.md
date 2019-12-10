@@ -110,6 +110,8 @@ $ python3 final_project_app.py --init
 Once the Flask application is running, the user should navigate to "http://127.0.0.1:5000/index" in a web browser (or whatever
 port Flask is hosting the site on, if port 5000 is already in use on your system).
 
+IMPORTANT NOTE: the landing page of the site is index.html and the routing path is /index. Navigating to "http://127.0.0.1:5000/" will produce a 404 not found error. Without specifying /index in the route, the sorting of the table would not work correctly. This is "feature" I will investigate in the future.
+
 The user should see a web page with a table of books and movie information presented to them. There is the option to
 sort the table by different column types (Type, Title, Author, or Bechdel Status) in either ascending or descending order.
 The user must select an option for EACH radio button, and then click the Update button in order to change the presentation of results in the table.
