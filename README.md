@@ -3,7 +3,7 @@
 Book && Movie is a SI 507 final project designed to present users with a set of movies, and their corresponding book versions,
 from FiveThirtyEight's data set of nearly 1,800 movie titles that were scored on the [Bechdel Test](https://en.wikipedia.org/wiki/Bechdel_test).
 
-## Data Sources
+## Data sources
 
 The project relied on:
 * [The Google Books API](https://developers.google.com/books)
@@ -11,7 +11,7 @@ The project relied on:
 * [The FiveThirtyEight .csv file](https://github.com/fivethirtyeight/data/blob/master/bechdel/movies.csv)
 for data-gathering.
 
-## Getting Started
+## Getting started
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing (or grading :) ) purposes.
 
@@ -53,17 +53,17 @@ templates
 
 4. Set up the virtual environment by doing the following:
 
-*Create a new virtual environment:
+* Create a new virtual environment:
 ```
 $ virtualenv myenv
 ```
 
-*Activate the virtual environment
+* Activate the virtual environment
 ```
 $ source myenv/bin/activate
 ```
 
-*Verify that there are no modules installed by pip, and then do a pip install from requirements.txt. You should see
+* Verify that there are no modules installed by pip, and then do a pip install from requirements.txt. You should see
 the following list of modules:
 ```
 (myenv) $ pip freeze
@@ -104,6 +104,15 @@ If the user wants to rebuild the database backing the project, they should inclu
 ```
 $ python3 final_project_app.py --init
 ```
+
+## Data presentation
+
+Once the Flask application is running, the user should navigate to "http://127.0.0.1:5000/index" in a web browser (or whatever
+port Flask is hosting the site on, if port 5000 is already in use on your system).
+
+The user should see a web page with a table of books and movie information presented to them. There is the option to
+sort the table by different column types (Type, Title, Author, or Bechdel Status) in either ascending or descending order.
+The user must select an option for EACH radio button, and then click the Update button in order to change the presentation of results in the table.
 
 ## Application Structure
 This application follows the MVC (Model-View-Controller) design pattern. The View layer is index.html, which is found in
