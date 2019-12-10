@@ -39,4 +39,4 @@ class Book (Media):
         self.pages = pages
 
     def __str__(self):
-        return super().__str__() + " [" + self.summary + "]"
+        return super().__str__() + " [" + str(self.pages) + "]"
