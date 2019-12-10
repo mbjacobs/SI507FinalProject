@@ -20,6 +20,7 @@ class Test_Database(unittest.TestCase):
         results = cur.execute(sql)
         result_list = results.fetchall()
         self.assertIn(('Anna Karenina',), result_list)
+        self.assertIn(('Admission',), result_list)
         self.assertEqual(len(result_list), 1794)
 
         conn.close()
@@ -37,6 +38,14 @@ class Test_Database(unittest.TestCase):
         self.assertIn(('Admission', '2013','Paul Weitz',), result_list)
         self.assertEqual(len(result_list), 408)
 
+        sql = '''
+               SELECT Title
+               FROM Movies WHERE Title="Up"
+           '''
+        results = cur.execute(sql)
+        result_list = results.fetchall()
+        self.assertEqual(len(result_list), 1)
+
         conn.close()
 
     def test_books_table(self):
@@ -48,7 +57,6 @@ class Test_Database(unittest.TestCase):
            '''
         results = cur.execute(sql)
         result_list = results.fetchall()
-        self.assertIn(('Admission',), result_list)
         self.assertIn(('Admission',), result_list)
         self.assertEqual(len(result_list), 88)
 
@@ -85,6 +93,9 @@ class Test_Movie(unittest.TestCase):
         movie1 = data_struct.Movie()
 
         self.assertEqual(movie1.rating,"No Rating")
+        self.assertEqual(movie1.genres, "None")
+        self.assertEqual(movie1.img_url, "None")
+        self.assertEqual(movie1.status,"No Data")
         self.assertIsInstance(movie1, data_struct.Movie)
         self.assertIsInstance(movie1, data_struct.Media)
 
