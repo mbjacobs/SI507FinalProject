@@ -1,4 +1,10 @@
-# Define data types.
+#########################################################################
+# Name:  Mariah Jacobs
+# Class: SI 507-003
+# Date:  December 10, 2019
+# File:  data_struct.py
+# Purpose: Define classes.
+#########################################################################
 class Media:
 
     def __init__(self, title="No Title", author="No Author", year="No Release Year", summary="None"):
@@ -25,11 +31,12 @@ class Movie (Media):
     def __str__(self):
         return super().__str__() + " [" + self.rating + "]"
 
+
 class Book (Media):
     def __init__(self, title="No Title", author="No Author", year="No Release Year",
-                 summary="None", img_url="None"):
+                 summary="None", pages=0):
         super().__init__(title, author, year, summary)
-        self.img_url = img_url
+        self.pages = pages
 
     def __str__(self):
         return super().__str__() + " [" + self.summary + "]"
